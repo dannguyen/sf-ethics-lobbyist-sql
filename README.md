@@ -1,5 +1,6 @@
 
-![club](https://i.imgur.com/oSqT5Q9.png)
+
+<a href="https://unsplash.com/photos/OCrPJce6GPk"><img src="https://i.imgur.com/0c2zPsT.png" alt="Photo from Unsplash via @gooner"></a>
 
 # SF-Ethics Lobbyist Disclosure SQLite Database
 
