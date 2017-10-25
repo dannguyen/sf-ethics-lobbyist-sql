@@ -1,12 +1,17 @@
-# SF-Ethics Lobbyist Disclosure data
 
-This is an impromptu repo that contains a lobbyist-disclosure database, as well as the code and steps I used to compile it. 
+![club](https://i.imgur.com/undefined.png)
 
-If you just want the data as a SQLite database, here it is as a downloadable file:
+# SF-Ethics Lobbyist Disclosure SQLite Database
+
+An impromptu repo for hosting a SF lobbyist-disclosure database, as well as the code and steps I used to compile the data.
+
+If you just want the data as a SQLite database, here it is as an easy-to-download SQLite file:
 
 [sf-ethics-lobbyist-disclosures.sqlite](sf-ethics-lobbyist-disclosures.sqlite)
 
-You can [also check out this meta-spreadsheet I've put together](https://docs.google.com/spreadsheets/d/1E4XS3bZK_8LcDU6DymLZo1voOPushNjB1bU1lIWgfBw/edit#gid=314188485) with information and links, including Google Sheet versions of the data tables (in case you need to practice data exploration with pivot tables).
+Further down in this README [are some some sample SQL explorations](#sql-fun).
+
+I've [also created a meta-spreadsheet](https://docs.google.com/spreadsheets/d/1E4XS3bZK_8LcDU6DymLZo1voOPushNjB1bU1lIWgfBw/edit#gid=314188485) with information, articles, and other links, including Google Sheet versions of the data tables (in case you need to practice data exploration with pivot tables).
 
 ## About the data and this repo
 
@@ -27,15 +32,23 @@ There are a couple of top-level shell scripts that you can run yourself if you h
 - [download.sh](download.sh) - just a bunch of `curl` calls to the datasets' Socrata endpoints. The [csvs/](csvs/) subdirectory contains the downloaded data.
 - [bootstrap.sh](bootstrap.sh) - a sloppy shell script that re-creates the database from the [schemas.sql](schemas.sql) and [indexes.sql](indexes.sql) scripts, and uses `csvsql` to import the plaintext CSV into the sqlite database.
 
+### SQL details
+
+
+The [SQLite database](sf-ethics-lobbyist-disclosures.sqlite) is nearly a straight dump from the raw text, and so most of its fields are plain text. I did some transformation of the `date` and `amount` columns -- converting into ISO date format and removing unneeded dollar-character-signs, respectively, so that those columns could be treated as `DATE` and `FLOAT`.
+
+I set most of the text columns to be  `COLLATE NOCASE` so that string comparisons would be case-insensitive. I don't know how reliable the data values are for joining the tables. For example, in the `lobbyists` table, a certain lobbyist has two `FullName` values, `'GRUWELL, CHRIS S.'` and `'GRUWELL, CHRIS'`. But in the `clients` table, his name (in the `lobbyist` field) is in titlecase, `'Grumwell, Chris S.'`  and `'Grumwell, Chris'`.
+
+
+
+<a name="sql-fun" id="sql-fun"></a>
 
 # Fun with SQL stories
 
-The [SQLite database is more-or-less a straight dump from the raw text](sf-ethics-lobbyist-disclosures.sqlite). I made a few changes for sanity: the `date` and `amount` columns were formatted to be more data-friendly -- e.g. converted to ISO format and removed dollar signs from the dollar amounts.
 
-I also defined most of the text columns as `COLLATE NOCASE` so that comparisons would be case-insensitive. I don't know how reliable the common-fields are between the tables. For example, in the `lobbyists` table, a certain lobbyist has two `FullName` values, `'GRUWELL, CHRIS S.'` and `'GRUWELL, CHRIS'`. But in the `clients` table, his name (in the `lobbyist` field) is in titlecase, `'Grumwell, Chris S.'`  and `'Grumwell, Chris'`.
+Even without knowing much about San Francisco's lobbying universe, we can still find interesting insights by following principles for good SQL queries and data thinking.
 
 
-But even without knowing much about San Francisco's lobbying universe, some SQL concepts work just as effectively as with any topic. 
 
 ## Prop T's effects
 
