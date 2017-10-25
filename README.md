@@ -849,9 +849,9 @@ GROUP BY techname, yearmonth
 ORDER BY yearmonth ASC, techname ASC;
 ~~~
 
-(obviously, this kind of query is prone to error, as in, not knowing/remembering the names to look for)
+Obviously, this kind of manual categorization is prone to error, such as, not knowing/remembering the names to look for. Or when companies go through a third-party with a different name...
 
-It's interesting to see the contacts by company for the most recent 3 months, sorted in order of most contacts. What's Lyft up to these days?
+It's interesting to filter the contacts by company for the most recent 3 months, sorted in order of most contacts. What's Lyft up to these days?
 
 
 ~~~sql
