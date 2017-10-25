@@ -98,7 +98,7 @@ ORDER BY year DESC;
 
 Graphing `total_amount` by `year` seems to indicate that political contributions from SF lobbyists have fallen steeply after the 2016 elections and passage of Prop T.
 
-![img](https://i.imgur.com/qfzUs4u.png)
+![img](https://i.imgur.com/bDgTIfk.png)
 
 #### Damned lies, statistics, and aggregations
 
