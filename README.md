@@ -18,9 +18,7 @@ I've [also created a meta-spreadsheet](https://docs.google.com/spreadsheets/d/1E
 
 The lobbyist data comes from the San Francisco Ethics Committee. You can explore the data through a [searchable website](https://netfile.com/Sunlight/sf/Lobbyist/ContactOfPublicOfficialSearch), but the Ethics Committee has made the data easy to download (as CSV) and [analyze via a Socrata Portal](https://sfethics.org/disclosures/lobbyist-disclosure/lobbyist-disclosure-data).
 
-That said, as someone who doesn't know much about lobbying especially in SF, I didn't put much effort into looking at this data. The jargon alone was intimidating enough. However, I'm currently teaching the power of SQL joins to my [computational journalism class](http://2017.padjo.org) and I wanted real-world datasets for which knowing SQL joins would be an obvious advantage for journalistic exploration.
-
-The SF ethics lobbyist data consists of 6 tables with confusingly vague names -- e.g. "Activity Expenses" and "Payments Promised By Clients". But I found that even for just 6 items, [making a spreadsheet to enumerate and understand the meaning of each table](https://docs.google.com/spreadsheets/d/1E4XS3bZK_8LcDU6DymLZo1voOPushNjB1bU1lIWgfBw/edit#gid=0) -- including their numbers of rows and columns  -- made it much easier to understand and appreciate the potential of the datasets.
+The SF ethics lobbyist dataset has 6 somewhat vaguely named tables -- e.g. "Activity Expenses" and "Payments Promised By Clients" -- relating to lobbyists in San Francisco, their clients, and their financial activity. It's not immediately clear how all the tables relate (many columns are duplicated), so I found it helpful to [make a spreadsheet to list the tables and their features](https://docs.google.com/spreadsheets/d/1E4XS3bZK_8LcDU6DymLZo1voOPushNjB1bU1lIWgfBw/edit#gid=0) -- including their numbers of rows and columns.
 
 And once the URLs are in a spreadsheet, automating the data-downloading and wrangling process is pretty straightforward.
 
@@ -47,10 +45,11 @@ The SQLite database contains 5 tables; I left out the ["Activity Expenses"](http
 
 <a name="sql-fun" id="sql-fun"></a>
 
-# Fun with SQL stories
+# Fun SQL stories
 
 
-Even without knowing much about San Francisco's lobbying universe, we can still find interesting insights by following principles for good SQL queries and data thinking.
+Even without firsthand knowledge of San Francisco's lobbying universe, we can still apply the same general good principles for asking questions of data with SQL. Below are assorted examples of SQL queries for understanding what the datasets contain, as well as some long-ass queries that I thought would turn out to be more interesting  `¯\_(ツ)_/¯` 
+
 
 
 
