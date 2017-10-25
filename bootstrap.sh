@@ -29,18 +29,24 @@ cat csvs/political_contributions.csv \
 
 ############### load the rest of the data
 
-echo "Loading 3 more tables..."
+echo "Loading clients table"
 
 cat csvs/clients.csv \
   | csvsql --no-create --insert \
            --db sqlite:///${DBNAME} \
            --tables clients
 
+
+echo "Loading lobbyists table"
+
 cat csvs/lobbyists.csv \
   | csvsql --no-create --insert \
            --db sqlite:///${DBNAME} \
            --tables lobbyists
 
+
+
+echo "Loading public_contacts table"
 
 cat csvs/public_contacts.csv \
   | csvsql --no-create --insert \
