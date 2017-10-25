@@ -1,5 +1,5 @@
 
-![club](https://i.imgur.com/undefined.png)
+![club](https://i.imgur.com/oSqT5Q9.png)
 
 # SF-Ethics Lobbyist Disclosure SQLite Database
 
