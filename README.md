@@ -348,8 +348,9 @@ Since it's the client paying the lobbyist, it doesn't make much sense that it's 
 
 The `JOIN` is straightforward, but creating the tables could be done in several ways. I'm going to go with my favorite technique: [Recursive Common Table Expressions](https://www.essentialsql.com/recursive-ctes-explained/)
 
+
 ~~~sql
-WITH gruwell_clients AS (
+WITH gclients AS (
         SELECT 
           lobbyist_client,
           STRFTIME('%Y', date) AS year,
@@ -357,52 +358,38 @@ WITH gruwell_clients AS (
         FROM client_payments
         WHERE 
             Lobbyist LIKE '%gruwell, Chris%'
-        GROUP BY lobbyist_client, year),
-    tx AS (
-        SELECT 
-          lobbyist_client,
-          total_amount
-        FROM gruwell_clients
-        WHERE year = '2014'
-        ORDER BY total_amount
-        LIMIT 30),
-    ty AS (
-        SELECT 
-          lobbyist_client,
-          total_amount
-        FROM gruwell_clients
-        WHERE year = '2016'
-        ORDER BY total_amount
-        LIMIT 30)
-
+        GROUP BY lobbyist_client, year)
 SELECT
   ty.lobbyist_client,
   ty.total_amount AS amt_2016,
   tx.total_amount AS amt_2014,
   (ty.total_amount - tx.total_amount) AS diff
-FROM ty
-LEFT JOIN tx 
+FROM gclients AS ty
+INNER JOIN gclients AS tx
   ON tx.lobbyist_client = ty.lobbyist_client
-WHERE tx.total_amount > 0
+    AND tx.year = '2014'
+    AND ty.year = '2016'
+
 ORDER BY diff ASC
 LIMIT 10;
 ~~~
 
 The result:
 
-| lobbyist_client                                     | amt_2016 | amt_2014 | diff     |
-| --------------------------------------------------- | -------- | -------- | -------- |
-| Mark Cavagnero Associates                           | 0.0      | 30000.0  | -30000.0 |
-| Salesforce.com Inc.                                 | 0.0      | 25000.0  | -25000.0 |
-| 1140 Folsom Llc                                     | 0.0      | 18000.0  | -18000.0 |
-| New Gadget, Inc.                                    | 0.0      | 10000.0  | -10000.0 |
-| Sparc                                               | 0.0      | 1500.0   | -1500.0  |
-| Beer Institute                                      | 0.0      | 0.0      | 0.0      |
-| California Beer & Beverage Distributors Association | 0.0      | 0.0      | 0.0      |
-| Distilled Spirits Council Of The Us                 | 0.0      | 0.0      | 0.0      |
-| Foster Interstate Media Inc.                        | 0.0      | 0.0      | 0.0      |
-| Koret Family House                                  | 0.0      | 0.0      | 0.0      |
 
+| lobbyist_client           | amt_2016 | amt_2014 | diff      |
+| ------------------------- | -------- | -------- | --------- |
+| Airbnb                    | 35500.0  | 150000.0 | -114500.0 |
+| Cb&i                      | 0.0      | 100000.0 | -100000.0 |
+| Bay West Development      | 0.0      | 37500.0  | -37500.0  |
+| Mark Cavagnero Associates | 0.0      | 30000.0  | -30000.0  |
+| Webcor Builders           | 76500.0  | 102000.0 | -25500.0  |
+| Salesforce.com Inc.       | 0.0      | 25000.0  | -25000.0  |
+| Sfo Shuttle Bus           | 5000.0   | 30000.0  | -25000.0  |
+| Zynga                     | 0.0      | 25000.0  | -25000.0  |
+| Zipcar                    | 17500.0  | 36000.0  | -18500.0  |
+| 1140 Folsom Llc           | 0.0      | 18000.0  | -18000.0  |
+{:.table-sql}
 
 
 Gruwell seems like such an outlier that there's probably more to analyze. The New York Times wrote about him in 2011, and the article sheds some insight to lobbying work in the Bay Area: [Lobbyists Play Outsize Role as Political Fund-Raisers in San Francisco](http://www.nytimes.com/2011/06/12/us/12bclobbyist.html)
