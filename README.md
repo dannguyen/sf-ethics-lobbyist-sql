@@ -799,7 +799,84 @@ WHERE lobbyist_client IN spendyclientnames;
 Note that the above isn't technically a JOIN. It uses a subquery to get a list of "spendy" clients. If `public_contacts.lobbyist_client` is in that list, then its `public_contact` record is included.
 
 
+### When tech calls
 
-**ok taking nap now**
+Client payments isn't the only metric in judging how well-heeled a client is. For some clients, you can just make an assumption, such as: tech companies are wealthy and may have a vested interest in San Francisco politics.
+
+For example, Google is not a huge spender, proportionally speaking, compared to other companies when it comes to SF lobbying (note that Google is both a client and a firm):
+
+~~~sql
+SELECT 
+  STRFTIME('%Y', date) AS year,
+  SUM(Amount) AS total
+FROM client_payments
+WHERE lobbyist_firm LIKE '%google%'
+  OR lobbyist_client LIKE '%google%'
+GROUP BY year
+ORDER BY year;
+~~~
+
+| year | total   |
+| ---- | ------- |
+| 2012 | 3000.0  |
+| 2013 | 0.0     |
+| 2015 | 24575.0 |
+| 2016 | 51148.0 |
+| 2017 | 16890.7 |
 
 
+Unfortunately, there is not a column in any of the tables in which a category of company is stated, i.e. "Tech" or "Non-Profit", etc. If you want to count things up by specific company, you have to specifically search for those companies.
+
+I don't believe there's an elegant way to do this in SQLite other than a massive `CASE` statement. Oh well.
+
+~~~sql
+SELECT 
+  STRFTIME('%Y-%m', Date) AS yearmonth,
+  CASE 
+    WHEN lobbyist_client LIKE '%google%' THEN 'Google'
+    WHEN lobbyist_client LIKE '%uber%' THEN 'Uber'
+    WHEN lobbyist_client LIKE '%lyft%' THEN 'Lyft'
+    WHEN lobbyist_client LIKE '%Airbnb%' THEN 'Airbnb'
+    WHEN lobbyist_client LIKE '%Facebook%' THEN 'Facebook'
+    WHEN lobbyist_client LIKE '%Alphabet%' THEN 'Alphabet'
+    WHEN lobbyist_client LIKE '%Salesforce%' THEN 'SalesForce'
+    WHEN lobbyist_client LIKE '%Pinterest%' THEN 'Pinterest'
+  END techname,
+  COUNT(*) AS contact_count
+FROM public_contacts
+WHERE techname IS NOT NULL
+GROUP BY techname, yearmonth
+ORDER BY yearmonth ASC, techname ASC;
+~~~
+
+(obviously, this kind of query is prone to error, as in, not knowing/remembering the names to look for)
+
+It's interesting to see the contacts by company for the most recent 3 months, sorted in order of most contacts. What's Lyft up to these days?
+
+
+~~~sql
+/* etc... */
+
+FROM public_contacts
+WHERE techname IS NOT NULL
+  AND yearmonth >= '2017-06'
+GROUP BY techname, yearmonth
+ORDER BY yearmonth ASC, contact_count DESC;
+~~~
+
+| yearmonth | techname   | contact_count |
+| --------- | ---------- | ------------- |
+| 2017-06   | Airbnb     | 6             |
+| 2017-06   | Lyft       | 3             |
+| 2017-06   | SalesForce | 3             |
+| 2017-06   | Google     | 1             |
+| 2017-07   | Airbnb     | 4             |
+| 2017-07   | Lyft       | 2             |
+| 2017-07   | SalesForce | 2             |
+| 2017-07   | Google     | 1             |
+| 2017-08   | Lyft       | 4             |
+| 2017-08   | Google     | 2             |
+| 2017-09   | Lyft       | 12            |
+| 2017-09   | Airbnb     | 6             |
+| 2017-09   | Google     | 2             |
+| 2017-09   | Uber       | 2             |
