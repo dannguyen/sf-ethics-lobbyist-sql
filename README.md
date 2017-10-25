@@ -880,3 +880,44 @@ ORDER BY yearmonth ASC, contact_count DESC;
 | 2017-09   | Airbnb     | 6             |
 | 2017-09   | Google     | 2             |
 | 2017-09   | Uber       | 2             |
+
+Not hard to query for the subject and details of Lyft's contacts. And for Uber's, for comparison's sake:
+
+~~~sql
+SELECT 
+  date,
+  lobbyist,
+  lobbyist_client,
+  municipaldecision,
+  official,
+  official_department
+FROM public_contacts
+WHERE 
+  date >= '2017-09'
+  AND (lobbyist_client LIKE '%uber%'
+         OR lobbyist_client LIKE '%lyft%')
+ORDER BY date;
+~~~
+
+| Date       | Lobbyist         | Lobbyist_Client         | MunicipalDecision                                                     | Official          | Official_Department             |
+| ---------- | ---------------- | ----------------------- | --------------------------------------------------------------------- | ----------------- | ------------------------------- |
+| 2017-09-07 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Brinkman, Cheryl  | Municipal Transportation Agency |
+| 2017-09-07 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Reiskin, Ed       | Municipal Transportation Agency |
+| 2017-09-07 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Kim, Jane         | Board Of Supervisors            |
+| 2017-09-07 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Breed, London     | Board Of Supervisors            |
+| 2017-09-07 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Cohen, Malia      | Board Of Supervisors            |
+| 2017-09-07 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Chang, Tilly      | Municipal Transportation Agency |
+| 2017-09-07 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Peskin, Aaron     | Board Of Supervisors            |
+| 2017-09-07 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Gillet, Gillian   | Mayor Office Of The             |
+| 2017-09-07 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Elliott, Jason    | Mayor Office Of The             |
+| 2017-09-08 | Randolph, Alex   | Uber Technologies, Inc. | Informational Meeting To Discuss Autonomous Vehicles In San Francisco | Fewer, Sandra Lee | Board Of Supervisors            |
+| 2017-09-08 | Noyola, David G. | Uber Technologies Inc.  | Self Driving Vehicles                                                 | Lee Fewer, Sandra | Board Of Supervisors            |
+| 2017-09-15 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Ramos, Joel       | Municipal Transportation Agency |
+| 2017-09-15 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Borden, Gwyneth   | Municipal Transportation Agency |
+| 2017-09-15 | Tourk, Alex      | Lyft                    | Ridesharing Policy                                                    | Hsu, Lee          | Municipal Transportation Agency |
+
+
+
+
+
+
