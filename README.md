@@ -8,7 +8,7 @@ An impromptu repo for hosting a SF lobbyist-disclosure database, as well as the 
 
 If you just want the data as a SQLite database, here it is as an easy-to-download SQLite file:
 
-[sf-ethics-lobbyist-disclosures.sqlite](sf-ethics-lobbyist-disclosures.sqlite)
+[sf-ethics-lobbyist-disclosures.sqlite](https://github.com/dannguyen/sf-ethics-lobbyist-sql/raw/master/sf-ethics-lobbyist-disclosures.sqlite)
 
 Further down in this README [are some some sample SQL explorations](#sql-fun).
 
@@ -26,7 +26,7 @@ And once the URLs are in a spreadsheet, automating the data-downloading and wran
 
 ## Repo contents
 
-You can get a download the database as I've compiled it on 2017-10-24 here: [sf-ethics-lobbyist-disclosures.sqlite](sf-ethics-lobbyist-disclosures.sqlite)
+You can get a download the database as I've compiled it on 2017-10-24 here: [sf-ethics-lobbyist-disclosures.sqlite](https://github.com/dannguyen/sf-ethics-lobbyist-sql/raw/master/sf-ethics-lobbyist-disclosures.sqlite)
 
 There are a couple of top-level shell scripts that you can run yourself if you have the [indispensible csvkit command-line tools installed](https://csvkit.readthedocs.io/en/1.0.2/) (particularly [csvsql](https://csvkit.readthedocs.io/en/1.0.2/scripts/csvsql.html)):
 
@@ -36,7 +36,7 @@ There are a couple of top-level shell scripts that you can run yourself if you h
 ### SQL details
 
 
-The [SQLite database](sf-ethics-lobbyist-disclosures.sqlite) is nearly a straight dump from the raw text, and so most of its fields are plain text. I did some transformation of the `date` and `amount` columns -- converting into ISO date format and removing unneeded dollar-character-signs, respectively, so that those columns could be treated as `DATE` and `FLOAT`.
+The [SQLite database](https://github.com/dannguyen/sf-ethics-lobbyist-sql/raw/master/sf-ethics-lobbyist-disclosures.sqlite) is nearly a straight dump from the raw text, and so most of its fields are plain text. I did some transformation of the `date` and `amount` columns -- converting into ISO date format and removing unneeded dollar-character-signs, respectively, so that those columns could be treated as `DATE` and `FLOAT`.
 
 I set most of the text columns to be  `COLLATE NOCASE` so that string comparisons would be case-insensitive. I don't know how reliable the data values are for joining the tables. For example, in the `lobbyists` table, a certain lobbyist has two `FullName` values, `'GRUWELL, CHRIS S.'` and `'GRUWELL, CHRIS'`. But in the `clients` table, his name (in the `lobbyist` field) is in titlecase, `'Grumwell, Chris S.'`  and `'Grumwell, Chris'`.
 
