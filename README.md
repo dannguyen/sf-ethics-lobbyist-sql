@@ -57,7 +57,7 @@ Even without firsthand knowledge of San Francisco's lobbying universe, we can st
 
 California voters overwhelmingly [passed Prop T in 2016, which called for more restrictions on gifts and campaign money from lobbyists](https://ballotpedia.org/San_Francisco,_California,_Restrictions_on_Gifts_and_Campaign_Contributions_from_Lobbyists,_Proposition_T_(November_2016)). Is Prop T's effect noted in the `political_contributions` table?
 
-##### What is the total amount of political contributions?
+#### What is the total amount of political contributions?
 
 ~~~sql
 SELECT
@@ -72,7 +72,7 @@ FROM
 | 2454           | 4163983.47   |
 
 
-##### What is the aggregate of contribs by year?
+#### What is the aggregate of contribs by year?
 
 ~~~sql
 SELECT
@@ -96,10 +96,67 @@ ORDER BY year DESC;
 | 2011 | 124            | 80640        |
 | 2010 | 196            | 442436       |
 
-Graphing `total_amount` by `year` seems to indicate that political contributions from SF lobbyists have fallen steeply:
+Graphing `total_amount` by `year` seems to indicate that political contributions from SF lobbyists have fallen steeply after the 2016 elections and passage of Prop T.
 
 ![img](https://i.imgur.com/qfzUs4u.png)
 
+#### Damned lies, statistics, and aggregations
+
+However, this particular chart may not be evidence at all about Prop T effectiveness. In fact, I'd argue that the chart serves more as a reminder of how a particular aggregation can present a drastically different picture than another, even when using the exact same data. When an aggregation is too broad -- in this case, summing up by year -- important truth can be eradicated. 
+
+What happens if we aggregate the contributions by *month*? The following query rounds every given date to being on the first of the month (this makes it easier to throw into a charting program):
+
+~~~sql
+SELECT 
+  STRFTIME('%Y-%m-01', Date) AS month,
+  SUM(Amount)
+FROM political_contributions
+GROUP BY month
+ORDER BY month ASC;
+~~~
+
+The resulting chart shows a reality more mundane: 2016 had spikes in giving because it was an election year. Sure, it was a much bigger year than 2012. But the monthly political contributions in 2017 look no more anemic than they did in 2013. In fact, they look *stronger*:
+
+![img](https://i.imgur.com/Tp8ezJ3.png)
+
+
+Aggregating the contribution amounts at the most granular level -- by day -- confirms the suspicion that it is too early to tell if Prop T has had any real effect on lobbyists and political contributions.
+
+~~~sql
+SELECT date,
+  SUM(Amount)
+FROM political_contributions
+GROUP BY date
+ORDER BY date ASC;
+~~~
+
+
+![img](https://i.imgur.com/qKvinux.png)
+
+And it's easy enough to do a query to confirm that 2017 is not at all a low post-election year for political contributions. Filter for records no later than September of each year (i.e. month `09`) and 2017 comes ahead of 3 other years:
+
+~~~sql
+SELECT 
+  STRFTIME('%Y', Date) AS year,
+  SUM(Amount) AS total 
+FROM political_contributions
+WHERE STRFTIME('%m', Date) <= '09'
+GROUP BY year
+ORDER BY total DESC;
+~~~
+
+| year | total  |
+| ---- | ------ |
+| 2016 | 660886 |
+| 2015 | 451805 |
+| 2010 | 302922 |
+| 2014 | 296641 |
+| 2017 | 120955 |
+| 2012 | 75018  |
+| 2013 | 32521  |
+| 2011 | 21602  |
+
+------
 
 There's likely more to look at in `political_contributions`, especially if any of its records relate to political activity recorded in the other tables.
 
